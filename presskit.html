@@ -30,7 +30,7 @@
 						<div id="menu">
 							<ul>
 								<li><a href="index.html">Home</a></li>
-								<li><a href="generic.html">Presskit</a></li>
+								<li><a href="presskit.html">Presskit</a></li>
 							</ul>
 						</div>
 					</li>
@@ -198,32 +198,30 @@
 
 
 
-				<br>
-				<button id="button primary" class="button">Download Pictures</button>
+				<body>
+					<button id="downloadButton" class="button">Download Pictures</button>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+					<script>
+						document.getElementById('downloadButton').addEventListener('click', function () {
+							var zip = new JSZip();
+							var folderName = 'images';
+							var fileNames = ['Altstadt1.jpg', 'Altstadt2.jpg', 'BandFoto.jpg', 'BandFoto2.jpg', 'BandFoto3.jpg', 'banner.jpg'];
+							fileNames.forEach(function (fileName) {
+								var imagePath = folderName + '/' + fileName;
+								zip.file(fileName, fetch(imagePath).then(response => response.blob()));
+							});
 
-				<script>
-					function downloadPictures() {
-						const imageUrls = [
-							'images/Altstadt1.jpg',
-							'images/Altstadt2.jpg',
-							'images/BandFoto.jpg',
-							'images/BandFoto2.jpg',
-							'images/BandFoto3.jpg',
-							'images/banner.jpg'
-						];
-
-						imageUrls.forEach(url => {
-							const link = document.createElement('a');
-							link.href = url;
-							link.download = url.substring(url.lastIndexOf('/') + 1);
-							document.body.appendChild(link);
-							link.click();
-							document.body.removeChild(link);
+							zip.generateAsync({ type: 'blob' }).then(function (zipContent) {
+								var link = document.createElement('a');
+								link.download = 'MajerPhotos.zip';
+								link.href = URL.createObjectURL(zipContent);
+								document.body.appendChild(link);
+								link.click();
+								document.body.removeChild(link);
+							});
 						});
-					}
-
-					document.getElementById('button primary').addEventListener('click', downloadPictures);
-				</script>
+					</script>
+				</body>
 
 
 
